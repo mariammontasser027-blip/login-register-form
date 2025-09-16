@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login & Register Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #4d0404;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: #9e8080;
+      padding: 20px 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      width: 320px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    input:focus {
+      border-color: #3b82f6;
+      outline: none;
+    }
+    .error {
+      color: red;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #973a48;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin-bottom: 10px;
+    }
+    button:hover {
+      background: #9b0837;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 id="formTitle">Login</h2>
+    <form id="userForm">
+      <label for="email">Email</label>
+      <input type="text" id="email" placeholder="example@mail.com">
+      <div id="emailError" class="error"></div>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="****">
+      <div id="passwordError" class="error"></div>
+
+      <div id="confirmPasswordContainer" style="display: none;">
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" placeholder="****">
+        <div id="confirmPasswordError" class="error"></div>
+      </div>
+
+      <button type="submit" id="submitBtn">Login</button>
+      <button type="button" id="toggleBtn">Create Account</button>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById("userForm");
+    const formTitle = document.getElementById("formTitle");
+    const email = document.getElementById("email");
+    const password = document.getElementById("password");
+    const confirmPassword = document.getElementById("confirmPassword");
+    const emailError = document.getElementById("emailError");
+    const passwordError = document.getElementById("passwordError");
+    const confirmPasswordError = document.getElementById("confirmPasswordError");
+    const confirmPasswordContainer = document.getElementById("confirmPasswordContainer");
+    const submitBtn = document.getElementById("submitBtn");
+    const toggleBtn = document.getElementById("toggleBtn");
+
+    let isLoginMode = true;
+
+    // Toggle between Login and Register
+    toggleBtn.addEventListener("click", () => {
+      isLoginMode = !isLoginMode;
+
+      if (isLoginMode) {
+        formTitle.textContent = "Login";
+        submitBtn.textContent = "Login";
+        toggleBtn.textContent = "Create Account";
+        confirmPasswordContainer.style.display = "none";
+      } else {
+        formTitle.textContent = "Register";
+        submitBtn.textContent = "Register";
+        toggleBtn.textContent = "Back to Login";
+        confirmPasswordContainer.style.display = "block";
+      }
+      form.reset();
+      clearErrors();
+    });
+
+    // Clear error messages
+    function clearErrors() {
+      emailError.textContent = "";
+      passwordError.textContent = "";
+      confirmPasswordError.textContent = "";
+    }
+
+    // Form validation
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+      clearErrors();
+
+      let isValid = true;
+
+      // Email validation
+      if (email.value.trim() === "") {
+        emailError.textContent = "Please enter your email.";
+        isValid = false;
+      } else if (!email.value.includes("@") || !email.value.includes(".")) {
+        emailError.textContent = "Invalid email format.";
+        isValid = false;
+      }
+
+      // Password validation
+      if (password.value.trim() === "") {
+        passwordError.textContent = "Please enter your password.";
+        isValid = false;
+      } else if (password.value.length < 6) {
+        passwordError.textContent = "Password must be at least 6 characters.";
+        isValid = false;
+      }
+
+      // Confirm Password validation (only in register mode)
+      if (!isLoginMode) {
+        if (confirmPassword.value.trim() === "") {
+          confirmPasswordError.textContent = "Please confirm your password.";
+          isValid = false;
+        } else if (confirmPassword.value !== password.value) {
+          confirmPasswordError.textContent = "Passwords do not match.";
+          isValid = false;
+        }
+      }
+
+      if (isValid) {
+        if (isLoginMode) {
+          alert("✅ Login successful!");
+        } else {
+          alert("✅ Registration successful!");
+        }
+        form.reset();
+      }
+    });
+  </script>
+</body>
+</html>
